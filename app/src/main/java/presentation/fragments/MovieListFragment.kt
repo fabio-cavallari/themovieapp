@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.themovieapp.R
+import data.dto.Status
+import data.dto.Status.SUCCESS
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import presentation.viewmodels.MovieListViewModel
 
@@ -35,7 +37,9 @@ class MovieListFragment: Fragment() {
 
     private fun setupObservers() {
         viewModel.movieList.observe(viewLifecycleOwner) {
-            mText.text = it.first().name
+            when (it.status) {
+                SUCCESS -> mText.text = it.data!!.movies.first().name
+            }
         }
     }
 

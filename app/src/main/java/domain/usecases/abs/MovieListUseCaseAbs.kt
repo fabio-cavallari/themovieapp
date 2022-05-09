@@ -1,7 +1,8 @@
 package domain.usecases.abs
 
-import domain.models.Movie
+import data.dto.RequestResponse
+import domain.models.MovieResult
 
 interface MovieListUseCaseAbs {
-    fun getPopularMovies(): List<Movie>
+    fun getPopularMovies(): RequestResponse<MovieResult>
 }
