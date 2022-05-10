@@ -17,6 +17,7 @@ class MovieListViewModel(
         get() = _movieList
 
     fun getPopularMovies() {
+        _movieList.value = RequestResponse.loading(null)
         viewModelScope.launch {
             val movieList = movieListUseCase.getPopularMovies()
             _movieList.postValue(movieList)
