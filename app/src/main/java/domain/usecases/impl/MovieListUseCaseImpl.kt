@@ -8,7 +8,7 @@ import domain.usecases.abs.MovieListUseCaseAbs
 class MovieListUseCaseImpl(
     private val movieListRepository: MovieListRepositoryAbs
 ): MovieListUseCaseAbs {
-    override fun getPopularMovies(): RequestResponse<MovieResult> {
+    override suspend fun getPopularMovies(): RequestResponse<MovieResult> {
         return movieListRepository.getPopularMovies()
     }
 }

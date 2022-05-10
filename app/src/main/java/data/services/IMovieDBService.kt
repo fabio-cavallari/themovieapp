@@ -6,5 +6,5 @@ import data.dto.RequestResponse
 import retrofit2.Response
 
 interface IMovieDBService {
-    fun getPopularMovieList(): RequestResponse<MovieResultDTO>
+    suspend fun getPopularMovieList(): RequestResponse<MovieResultDTO>
 }

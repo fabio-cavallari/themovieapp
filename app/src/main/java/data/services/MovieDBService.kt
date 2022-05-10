@@ -3,7 +3,6 @@ package data.services
 import common.Constants.API_BASE_URL
 import common.ServiceFactory.getBaseRetrofitClient
 import data.clients.MovieDBClient
-import data.dto.MovieDTO
 import data.dto.MovieResultDTO
 import data.dto.RequestResponse
 
@@ -13,20 +12,16 @@ class MovieDBService: IMovieDBService {
         .build()
         .create(MovieDBClient::class.java)
 
-    override fun getPopularMovieList(): RequestResponse<MovieResultDTO> {
+    override suspend fun getPopularMovieList(): RequestResponse<MovieResultDTO> {
         try {
-            val movieResult = movieDBClient.getPopularMovies(API_BASE_URL)
-            return RequestResponse.success(
-                MovieResultDTO(
-                    listOf(MovieDTO(
-                    "title",
-                    "poster",
-                    "10")),
-                    1,
-                    10))
-
+            val movieResult = movieDBClient.getPopularMovies(API_KEY)
+            return RequestResponse.success(movieResult.body())
         } catch (t: Throwable) {
             return RequestResponse.error(null, null)
         }
+    }
+
+    companion object {
+        const val API_KEY = "1b177e0639397148cb6fcf0b9302a68d"
     }
 }

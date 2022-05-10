@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface MovieDBClient {
     @GET("movie/popular")
-    fun getPopularMovies(
+    suspend fun getPopularMovies(
         @Query("api_key") apiKey: String
     ): Response<MovieResultDTO>
 }

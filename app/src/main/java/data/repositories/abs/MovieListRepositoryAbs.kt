@@ -4,5 +4,5 @@ import data.dto.RequestResponse
 import domain.models.MovieResult
 
 interface MovieListRepositoryAbs {
-    fun getPopularMovies(): RequestResponse<MovieResult>
+    suspend fun getPopularMovies(): RequestResponse<MovieResult>
 }
