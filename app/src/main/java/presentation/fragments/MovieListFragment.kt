@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.themovieapp.R
-import data.dto.Status.ERROR
-import data.dto.Status.LOADING
-import data.dto.Status.SUCCESS
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import presentation.adapters.MovieListAdapter
 import presentation.viewmodels.MovieListViewModel
@@ -32,41 +32,24 @@ class MovieListFragment: Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         findViews(view)
-        setupObservers()
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getButton.setOnClickListener {
-            viewModel.getPopularMovies()
-        }
+//        getButton.setOnClickListener {
+//            viewModel.getPopularMovies(1)
+//        }
         movieList.adapter = movieListAdapter
+        movieList.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         movieList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        setupObservers()
     }
 
     private fun setupObservers() {
-        viewModel.movieList.observe(viewLifecycleOwner) {
-            when (it.status) {
-                SUCCESS -> {
-                    getButton.visibility = View.GONE
-                    errorView.visibility = View.GONE
-                    loadingView.visibility = View.GONE
-                    movieList.visibility = View.VISIBLE
-                    movieListAdapter.submitList(it.data!!.movies)
-                }
-                LOADING -> {
-                    getButton.visibility = View.GONE
-                    errorView.visibility = View.GONE
-                    loadingView.visibility = View.VISIBLE
-                    movieList.visibility = View.GONE
-                }
-                ERROR -> {
-                    getButton.visibility = View.GONE
-                    errorView.visibility = View.VISIBLE
-                    loadingView.visibility = View.GONE
-                    movieList.visibility = View.GONE
-                }
+        lifecycleScope.launch {
+            viewModel.getPopularMovies().observe(viewLifecycleOwner) {
+                movieListAdapter.submitData(lifecycle, it)
             }
         }
     }
@@ -78,5 +61,23 @@ class MovieListFragment: Fragment() {
             errorView = findViewById(R.id.error_view)
             movieList = findViewById(R.id.movie_list)
         }
+        getButton.visibility = View.GONE
+        errorView.visibility = View.GONE
+        loadingView.visibility = View.GONE
+        movieList.visibility = View.VISIBLE
+    }
+
+    private fun setupLoadingState() {
+        getButton.visibility = View.GONE
+        errorView.visibility = View.GONE
+        loadingView.visibility = View.VISIBLE
+        movieList.visibility = View.GONE
+    }
+
+    private fun setupErrorState() {
+        getButton.visibility = View.GONE
+        errorView.visibility = View.VISIBLE
+        loadingView.visibility = View.GONE
+        movieList.visibility = View.GONE
     }
 }

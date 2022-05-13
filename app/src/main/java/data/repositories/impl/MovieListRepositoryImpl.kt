@@ -1,24 +1,28 @@
 package data.repositories.impl
 
-import data.dto.RequestResponse
-import data.dto.Status
-import data.dto.asDomainModel
+import androidx.lifecycle.LiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import data.pagingdatasources.MoviesDataSource
 import data.repositories.abs.MovieListRepositoryAbs
 import data.services.IMovieDBService
-import domain.models.MovieResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import domain.models.Movie
 
 class MovieListRepositoryImpl(
     private val movieDBService: IMovieDBService
 ): MovieListRepositoryAbs {
-    override suspend fun getPopularMovies(): RequestResponse<MovieResult> {
-        return withContext(Dispatchers.IO) {
-            val result = movieDBService.getPopularMovieList()
-            if (result.status == Status.SUCCESS) {
-                return@withContext RequestResponse.success(result.data!!.asDomainModel())
+    override suspend fun getPopularMovies(): LiveData<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                initialLoadSize = 40,
+                prefetchDistance = 10
+            ),
+            pagingSourceFactory = {
+                MoviesDataSource(movieDBService)
             }
-            return@withContext RequestResponse.error(null, null)
-        }
+        ).liveData
     }
 }

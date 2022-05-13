@@ -1,14 +1,15 @@
 package domain.usecases.impl
 
-import data.dto.RequestResponse
+import androidx.lifecycle.LiveData
+import androidx.paging.PagingData
 import data.repositories.abs.MovieListRepositoryAbs
-import domain.models.MovieResult
+import domain.models.Movie
 import domain.usecases.abs.MovieListUseCaseAbs
 
 class MovieListUseCaseImpl(
     private val movieListRepository: MovieListRepositoryAbs
 ): MovieListUseCaseAbs {
-    override suspend fun getPopularMovies(): RequestResponse<MovieResult> {
+    override suspend fun getPopularMovies(): LiveData<PagingData<Movie>> {
         return movieListRepository.getPopularMovies()
     }
 }

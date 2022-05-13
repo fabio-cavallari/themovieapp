@@ -12,9 +12,9 @@ class MovieDBService: IMovieDBService {
         .build()
         .create(MovieDBClient::class.java)
 
-    override suspend fun getPopularMovieList(): RequestResponse<MovieResultDTO> {
+    override suspend fun getPopularMovieList(page: Int): RequestResponse<MovieResultDTO> {
         try {
-            val movieResult = movieDBClient.getPopularMovies(API_KEY)
+            val movieResult = movieDBClient.getPopularMovies(API_KEY, page)
             return RequestResponse.success(movieResult.body())
         } catch (t: Throwable) {
             return RequestResponse.error(null, null)

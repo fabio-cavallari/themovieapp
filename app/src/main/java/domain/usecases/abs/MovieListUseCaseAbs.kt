@@ -1,8 +1,9 @@
 package domain.usecases.abs
 
-import data.dto.RequestResponse
-import domain.models.MovieResult
+import androidx.lifecycle.LiveData
+import androidx.paging.PagingData
+import domain.models.Movie
 
 interface MovieListUseCaseAbs {
-    suspend fun getPopularMovies(): RequestResponse<MovieResult>
+    suspend fun getPopularMovies(): LiveData<PagingData<Movie>>
 }
