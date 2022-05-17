@@ -25,8 +25,8 @@ class MoviesDataSource (
 //        val apiQuery = query + IN_QUALIFIER
         return try {
             val response = service.getPopularMovieList(page)
-            val movies = response.data!!.results.asDomainModel()
-            val nextKey = if (movies.isNullOrEmpty() || page == response.data.totalPages) {
+            val movies = response.data?.results?.asDomainModel()?: listOf()
+            val nextKey = if (movies.isNullOrEmpty() || page == response.data?.totalPages) {
                 null
             } else {
                 page + 1
